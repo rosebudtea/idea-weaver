@@ -5,7 +5,7 @@ export const WorldContentContext = React.createContext({
     worldName: "",
     mainCategory: "",
     mainCategoryContent: [],
-    mainContent: "",
+    mainContent: {},
     createWorld: () => {},
     createCategory: () => {},
     createContent: () => {},
@@ -15,7 +15,6 @@ export const WorldContentContext = React.createContext({
 });
 
 function contentReducer(state, action) {
-    // console.log(state);
     if (action.type === "CHANGE_WORLD") {
         console.log("Change World: " + action.payload);
         return {
@@ -37,16 +36,18 @@ function contentReducer(state, action) {
         };
     } else if (action.type === "CHANGE_MAIN_CONTENT") {
         console.log("Change Main Content: " + action.payload);
+        const content = {category: state.mainCategory, id: action.payload};
+        console.log(content);
         return {
             ...state,
-            mainContent: action.payload,
+            mainContent: content,
         };
     }
     return state;
 }
 
 export default function WorldContentContextProvider({children}) {
-    const [contentState, contentDispatch] = React.useReducer(contentReducer, {worldName: "", mainCategory: "", mainCategoryContent: [], mainContent: ""});
+    const [contentState, contentDispatch] = React.useReducer(contentReducer, {worldName: "", mainCategory: "", mainCategoryContent: [], mainContent: {}});
 
     function createNewWorld(worldName) {
         createWorld(handleWorldChange, worldName);

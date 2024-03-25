@@ -39,7 +39,7 @@ export default function PanelController() {
     return (
         <>
             <h3>Panels</h3>
-            <p>{mainContent}</p>
+            <p>{mainContent.id}</p>
             <button id="add-panel-row-button" onClick={handleAddPanelRow}>+</button>
             {panels.map((panelrow) => {
                 console.log(panelrow);
