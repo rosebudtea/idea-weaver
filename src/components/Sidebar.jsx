@@ -8,7 +8,7 @@ export default function Sidebar() {
         <div id="sidebar">
             <div id="side-buttons">
                 <button onClick={() => changeCategory('elements')}>E</button>
-                <button onClick={() => changeCategory('dialogue')}>D</button>
+                {/* <button onClick={() => changeCategory('dialogue')}>D</button> */}
                 <button onClick={() => changeCategory('timelines')}>T</button>
                 <button onClick={() => changeCategory('outlines')}>O</button>
                 <button onClick={() => changeCategory('works')}>W</button>

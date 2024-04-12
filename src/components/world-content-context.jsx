@@ -1,7 +1,7 @@
-import React from "react";
+import React, { createContext, useReducer } from "react";
 import { createCategory, createWorld, fetchAllContent, fetchCategories, createContent } from "../http.js";
 
-export const WorldContentContext = React.createContext({
+export const WorldContentContext = createContext({
     worldName: "",
     mainCategory: "",
     mainCategoryContent: [],
@@ -14,7 +14,7 @@ export const WorldContentContext = React.createContext({
     changeMainContent: () => {},
 });
 
-function contentReducer(state, action) {
+function worldReducer(state, action) {
     if (action.type === "CHANGE_WORLD") {
         console.log("Change World: " + action.payload);
         return {
@@ -47,7 +47,7 @@ function contentReducer(state, action) {
 }
 
 export default function WorldContentContextProvider({children}) {
-    const [contentState, contentDispatch] = React.useReducer(contentReducer, {worldName: "", mainCategory: "", mainCategoryContent: [], mainContent: {}});
+    const [worldState, worldDispatch] = useReducer(worldReducer, {worldName: "", mainCategory: "", mainCategoryContent: [], mainContent: {}});
 
     function createNewWorld(worldName) {
         createWorld(handleWorldChange, worldName);
@@ -55,17 +55,17 @@ export default function WorldContentContextProvider({children}) {
 
     function createNewCategory(categoryName) {
         console.log("Create Category");
-        createCategory(categoryName, contentState.worldName);
-        fetchCategories(contentDispatch, contentState.worldName);
+        createCategory(categoryName, worldState.worldName);
+        fetchCategories(worldDispatch, worldState.worldName);
     }
 
     function createNewContent(name, category) {
         console.log("Create Content");
-        createContent(category, name, contentState.worldName);
+        createContent(category, name, worldState.worldName);
     }
 
     function handleWorldChange(worldName) {
-        contentDispatch({
+        worldDispatch({
             type: "CHANGE_WORLD",
             payload: worldName,
         });
@@ -73,8 +73,8 @@ export default function WorldContentContextProvider({children}) {
 
     function handleCategoryChange(category) {
         // console.log("Handle Category Change: " + category);
-        if (category === contentState.mainCategory) {
-            contentDispatch({
+        if (category === worldState.mainCategory) {
+            worldDispatch({
                 type: "CHANGE_CATEGORY",
                 payload: {
                     name: "",
@@ -83,25 +83,25 @@ export default function WorldContentContextProvider({children}) {
             });
         } else {
             if (category === "elements") {
-                fetchCategories(contentDispatch, contentState.worldName);
+                fetchCategories(worldDispatch, worldState.worldName);
             } else {
-                fetchAllContent(contentDispatch, "CHANGE_CATEGORY", category, contentState.worldName);
+                fetchAllContent(worldDispatch, "CHANGE_CATEGORY", category, worldState.worldName);
             }
         }
     }
 
     function handleMainContentChange(id) {
-        contentDispatch({
+        worldDispatch({
             type: "CHANGE_MAIN_CONTENT",
             payload: id,
         });
     }
 
     const ctxValue = {
-        worldName: contentState.worldName,
-        mainCategory: contentState.mainCategory,
-        mainCategoryContent: contentState.mainCategoryContent,
-        mainContent: contentState.mainContent,
+        worldName: worldState.worldName,
+        mainCategory: worldState.mainCategory,
+        mainCategoryContent: worldState.mainCategoryContent,
+        mainContent: worldState.mainContent,
         createWorld: createNewWorld,
         createCategory: createNewCategory,
         createContent: createNewContent,

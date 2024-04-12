@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { forwardRef, useRef, useImperativeHandle } from 'react';
 
-export const CreationModal = React.forwardRef(function ContentCreationModal({createFn, category}, ref) {
-    const dialog = React.useRef();
-    const nameInput = React.useRef();
+export const CreationModal = forwardRef(function ContentCreationModal({createFn, category}, ref) {
+    const dialog = useRef();
+    const nameInput = useRef();
 
-    React.useImperativeHandle(ref, () => {
+    useImperativeHandle(ref, () => {
         return {
             open() {
                 nameInput.current.value = "";
