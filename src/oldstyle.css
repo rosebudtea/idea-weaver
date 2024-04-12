@@ -1,0 +1,142 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+      Arial, sans-serif;
+    margin: auto;
+    max-width: 38rem;
+    padding: 2rem;
+    background-color:rgb(6, 108, 108);
+  }
+  
+  #main {
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+  }
+  
+  #main-content {
+    /* padding: 1rem; */
+    border-style: ridge;
+    border-width: .5rem;
+    border-color: darkgray;
+    width: 100%;
+  }
+  
+  #sidebar {
+    background-color: dimgray;
+    border-style: ridge;
+    border-width: .5rem;
+    border-color: darkgray;
+  }
+  
+  #side-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #side-buttons button {
+    background-color: darkgrey;
+    min-width: 4rem;
+    min-height: 4rem;
+    border-width: .25rem;
+  }
+  
+  #content-side {
+    background-color: dimgray;
+    border-style: ridge;
+    border-width: .5rem;
+    border-color: darkgray;
+  }
+  
+  #content-side button {
+    background-color: darkgrey;
+    border-width: .25rem;
+  }
+  
+  #content-side p {
+    margin: 0px;
+  }
+  
+  #side-head {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  #content-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #dialogue-flow  {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+  }
+  
+  #dialogue-flow aside {
+    border-right: 1px solid #eee;
+    padding: 15px 10px;
+    font-size: 12px;
+    background: #fcfcfc;
+  }
+  
+  #dialogue-flow aside .description {
+    margin-bottom: 10px;
+  }
+  
+  #start-node {
+    background-color: darkseagreen;
+    border-radius: 8px;
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #end-node {
+    background-color: indianred;
+    border-radius: 8px;
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #dialogue-node {
+    background-color: antiquewhite;
+    border-radius: 8px;
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #choice-node {
+    background-color: antiquewhite;
+    border-radius: 8px;
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #node-choice {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+  
+  #event-node {
+    background-color: antiquewhite;
+    border-radius: 8px;
+    padding: .5rem;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  #event-node p {
+    padding: 0;
+    margin: 0;
+  }
+  

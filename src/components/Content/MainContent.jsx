@@ -1,10 +1,9 @@
 import React from 'react';
 import { WorldContentContext } from '../world-content-context.jsx';
 import PanelController from './Panels/PanelController.jsx';
-import DialogueController from './Dialogue/DialogueController.jsx';
 
 export default function MainContent() {
-    const {mainCategory, mainContent} = React.useContext(WorldContentContext);
+    const {mainContent} = React.useContext(WorldContentContext);
 
     // Panels
     // Documents: Snippets, Works
@@ -13,11 +12,9 @@ export default function MainContent() {
     // Outlines
 
     function renderContent() {
-        switch (mainCategory) {
+        switch (mainContent.category) {
             case "elements":
                 return <PanelController />;
-            case "dialogue":
-                return <DialogueController />;
             case "timelines":
                 return <p>Timelines</p>;
             case "outlines":
