@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "./dropdown.css";
 
 export default function Dropdown({buttonText, menuItems}) {
     const [open, setOpen] = useState(false);

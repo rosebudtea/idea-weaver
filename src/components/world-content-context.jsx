@@ -37,7 +37,7 @@ function worldReducer(state, action) {
     } else if (action.type === "CHANGE_MAIN_CONTENT") {
         console.log("Change Main Content: " + action.payload);
         const content = {category: state.mainCategory, id: action.payload};
-        console.log(content);
+        // console.log(content);
         return {
             ...state,
             mainContent: content,

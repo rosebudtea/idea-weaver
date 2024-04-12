@@ -1,0 +1,36 @@
+#panel-container {
+    width: 100%;
+  }
+  
+  #panel-row {
+    background-color: burlywood;
+    border-radius: 8px;
+  }
+  
+  #divider {
+    background-color: dimgray;
+    padding: .1rem;
+    border-radius: .5rem;
+    margin: .5rem;
+  }
+  
+  #panel-row-title {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  #panel-title {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  h3 {
+    padding: .2rem;
+    margin: 0;
+  }
+  
+  #row-content {
+    display: flex;
+    flex-direction: row;
+  }
+  

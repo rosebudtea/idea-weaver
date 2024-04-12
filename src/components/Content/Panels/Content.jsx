@@ -1,24 +1,28 @@
-import React, { forwardRef, useRef, useState } from 'react';
+import React, { forwardRef, useContext, useRef, useState } from 'react';
+import { PanelsContentContext } from './panels-content-context.jsx';
 import Dropdown from './Dropdown.jsx';
 
 import './content.css';
 
-const ContentTitle = forwardRef(function ContentTitleBatch({contentTitle, menuItems, editing, saveContent}, ref) {
+const ContentTitle = forwardRef(function ContentTitleBatch({rowNum, panelNum, contentTitle, contentNum, menuItems, editing}, ref) {
+    const {updateContentInPanel, removeContentFromPanel, saveContent} = useContext(PanelsContentContext);
+    const titleInput = useRef();
+
     return (
         <div id="content-title">
-            {(editing !== "all" && editing !== "title") && contentTitle && <p>{contentTitle}</p>}
-            {(editing === "all" || editing === "title") && <input ref={ref} type="text" />}
+            {(editing !== "all" && editing !== "title") && contentTitle && <p>{contentTitle} {contentNum}</p>}
+            {(editing === "all" || editing === "title") && <input ref={titleInput} type="text" />}
             {!editing && <Dropdown
                 buttonText={"E"}
                 menuItems={menuItems}
             />}
             {editing && <button id="content-save-button" onClick={saveContent} >S</button>}
+            <button id="content-remove-button" onClick={() => removeContentFromPanel(rowNum, panelNum, contentNum)}>-</button>
         </div>);
 });
 
-function TextContent({content}) {
+function TextContent({rowNum, panelNum, content}) {
     const [editing, setEditing] = useState("");
-    const titleInput = useRef();
     const textInput = useRef();
     const descripInput = useRef();
 
@@ -40,7 +44,9 @@ function TextContent({content}) {
                 <button onClick={() => handleEditing("descrip")}>Description</button>,
             ]}
             editing={editing}
-            saveContent={saveContent}
+            rowNum={rowNum}
+            panelNum={panelNum}
+            contentNum={content.contentNum}
         />
         {(editing !== "all" && editing !== "text") && content.contentActual.text && <p>{content.contentActual.text}</p>}
         {(editing === "all" || editing === "text") && <input ref={textInput} type="text" />}
@@ -49,9 +55,8 @@ function TextContent({content}) {
     </div>)
 }
 
-function NumberContent({content}) {
+function NumberContent({rowNum, panelNum, content}) {
     const [editing, setEditing] = useState("");
-    const titleInput = useRef();
     const numInput = useRef();
     const descripInput = useRef();
 
@@ -73,7 +78,9 @@ function NumberContent({content}) {
                 <button onClick={() => handleEditing("descrip")}>Description</button>,
             ]}
             editing={editing}
-            saveContent={saveContent}
+            rowNum={rowNum}
+            panelNum={panelNum}
+            contentNum={content.contentNum}
         />
         {(editing !== "all" && editing !== "num") && content.contentActual.num && <p>{content.contentActual.num}</p>}
         {(editing === "all" || editing === "num") && <input ref={numInput} type="text" />}
@@ -82,9 +89,8 @@ function NumberContent({content}) {
     </div>)
 }
 
-function SliderContent({content}) {
+function SliderContent({rowNum, panelNum, content}) {
     const [editing, setEditing] = useState("");
-    const titleInput = useRef();
     const slideInput = useRef();
     const leftInput = useRef();
     const rightInput = useRef();
@@ -110,7 +116,9 @@ function SliderContent({content}) {
                 <button onClick={() => handleEditing("descrip")}>Description</button>,
             ]}
             editing={editing}
-            saveContent={saveContent}
+            rowNum={rowNum}
+            panelNum={panelNum}
+            contentNum={content.contentNum}
         />
         <div id="content-slider">
             {(editing !== "all" && editing !== "left") && content.contentActual.left && <p>{content.contentActual.left}</p>}
@@ -123,9 +131,8 @@ function SliderContent({content}) {
     </div>)
 }
 
-function ImageContent({content}) {
+function ImageContent({rowNum, panelNum, content}) {
     const [editing, setEditing] = useState("");
-    const titleInput = useRef();
     const imageInput = useRef();
     const descripInput = useRef();
 
@@ -147,7 +154,9 @@ function ImageContent({content}) {
                 <button onClick={() => handleEditing("descrip")}>Description</button>,
             ]}
             editing={editing}
-            saveContent={saveContent}
+            rowNum={rowNum}
+            panelNum={panelNum}
+            contentNum={content.contentNum}
         />
         {(editing !== "all" && editing !== "image") && content.contentActual.image && <p>{content.contentActual.image}</p>}
         {(editing === "all" || editing === "image") && <input ref={imageInput} type="text" />}
@@ -156,18 +165,18 @@ function ImageContent({content}) {
     </div>)
 }
 
-export default function Content({content, updateContent}) {
+export default function Content({rowNum, panelNum, content}) {
     function getContent(contentType) {
         switch(contentType) {
             case "image":
-                return (<ImageContent content={content} />);
+                return (<ImageContent rowNum={rowNum} panelNum={panelNum} content={content} />);
             case "slider":
-                return (<NumberContent content={content} />);
+                return (<NumberContent rowNum={rowNum} panelNum={panelNum} content={content} />);
             case "number":
-                return (<SliderContent content={content} />);
+                return (<SliderContent rowNum={rowNum} panelNum={panelNum} content={content} />);
             case "text":
             default:
-                return (<TextContent content={content} />);
+                return (<TextContent rowNum={rowNum} panelNum={panelNum} content={content} />);
         }
     }
 

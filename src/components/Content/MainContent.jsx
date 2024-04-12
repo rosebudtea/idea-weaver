@@ -1,6 +1,7 @@
 import React from 'react';
 import { WorldContentContext } from '../world-content-context.jsx';
 import PanelController from './Panels/PanelController.jsx';
+import PanelsContentContextProvider from './Panels/panels-content-context.jsx';
 
 export default function MainContent() {
     const {mainContent} = React.useContext(WorldContentContext);
@@ -14,7 +15,9 @@ export default function MainContent() {
     function renderContent() {
         switch (mainContent.category) {
             case "elements":
-                return <PanelController />;
+                return (<PanelsContentContextProvider>
+                    <PanelController />
+                </PanelsContentContextProvider>);
             case "timelines":
                 return <p>Timelines</p>;
             case "outlines":
