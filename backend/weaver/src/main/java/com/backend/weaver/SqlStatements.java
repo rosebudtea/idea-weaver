@@ -43,7 +43,8 @@ public class SqlStatements {
     public String grabSpecificFromCategoryInContentTable = "SELECT * FROM content WHERE content_id = \"%s\" AND world_name = \"%s\" AND category = \"%s\";";
 
     public String insertIntoContentTable = "INSERT INTO content (content_id, content_name, category, world_name) VALUES (\"%s\", \"%s\", \"%s\", \"%s\");";
-    public String updateSpecificInContentTable = "UPDATE content set panel_content = \"%s\" WHERE content_id = \"%s\" AND world_name = \"%s\" AND category = \"%s\";";
+    public String updateContentInContentTable = "UPDATE content set panel_content = \"%s\" WHERE content_id = \"%s\" AND world_name = \"%s\" AND category = \"%s\";";
+    public String updateNameInContentTable = "UPDATE content set content_name = \"%s\" WHERE content_id = \"%s\" AND world_name = \"%s\" AND category = \"%s\";";
     public String deleteFromContentTable = "DELETE FROM content WHERE content_id = \"%s\" AND world_name = \"%s\" AND category = \"%s\";";
     public String deleteEverythingFromContentTable = "DELETE FROM content WHERE world_name = \"%s\";";
 

@@ -15,12 +15,12 @@
         // image: {image: image, descrip: "description text"}
 
 
-const panel1 = {panelTitle: "", panelNum: 0, panelType: "info", panelContent: []};
+const panel1 = {panelTitle: "Test Panel", panelNum: 0, starred: false, panelType: "info", panelContent: []};
 const panel2 = {panelTitle: "", panelNum: 1, panelType: "info", panelContent: []};
 const panel3 = {panelTitle: "", panelNum: 2, panelType: "info", panelContent: []};
 
 const panelRow1 = {
-    rowTitle: "",
+    rowTitle: "Test Row",
     rowNum: 0,
     panels: [panel1],
 };

@@ -4,7 +4,7 @@ import PanelController from './Panels/PanelController.jsx';
 import PanelsContentContextProvider from './Panels/panels-content-context.jsx';
 
 export default function MainContent() {
-    const {mainContent} = React.useContext(WorldContentContext);
+    const {mainContent, mainCategory} = React.useContext(WorldContentContext);
 
     // Panels
     // Documents: Snippets, Works
@@ -13,17 +13,19 @@ export default function MainContent() {
     // Outlines
 
     function renderContent() {
-        switch (mainContent.category) {
-            case "elements":
-                return (<PanelsContentContextProvider>
-                    <PanelController />
-                </PanelsContentContextProvider>);
+        switch (mainCategory) {
             case "timelines":
                 return <p>Timelines</p>;
             case "outlines":
                 return <p>Outlines</p>;
             case "works":
                 return <p>Documents</p>;
+            case "elements":
+                if (mainContent.id) {
+                    return (<PanelsContentContextProvider>
+                        <PanelController />
+                    </PanelsContentContextProvider>);
+                }
             default:
                 return <p>Please choose something to work on</p>;
         }

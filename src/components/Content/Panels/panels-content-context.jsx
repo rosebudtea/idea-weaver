@@ -1,11 +1,12 @@
 import React, { createContext, useReducer } from "react";
 import { PANELS } from "../../../testdata/paneldata.jsx";
+import { updateContent } from "../../../http.js";
 
 export const PanelsContentContext = createContext({
     panelRows: [],
     addPanelRow: () => {},
     removePanelRow: () => {},
-    updateePanelRow: () => {},
+    updatePanelRow: () => {},
     addPanelToRow: () => {},
     removePanelFromRow: () => {},
     updatePanelInRow: () => {},
@@ -30,10 +31,17 @@ function panelsReducer(state, action) {
         let panelRows = stateCopy.panelRows.filter((row) => row.rowNum !== action.rowNum);
         return {...state, panelRows: [...panelRows]};
     } else if (action.type === "UPDATE_PANEL_ROW") {
+        console.log("UPDATE PANEL ROW");
+        let stateCopy = JSON.parse(JSON.stringify(state));
+        stateCopy.panelRows.forEach((row) => {
+            if (row.rowNum === action.rowNum) {
+                row.rowTitle = action.rowTitle;
+            }
+        });
+        return {...state, panelRows: [...stateCopy.panelRows]};
     } else if (action.type === "ADD_PANEL") {
         console.log("ADD PANEL TO ROW");
         let stateCopy = JSON.parse(JSON.stringify(state));
-        console.log(stateCopy);
         stateCopy.panelRows.forEach((row) => {
             if (row.rowNum === action.rowNum) {
                 let newPanel = {panelTitle: "New Panel", panelNum: row.panels.length, panelType: action.panelType, starred: false, panelContent: []};
@@ -52,6 +60,19 @@ function panelsReducer(state, action) {
         });
         return {...state, panelRows: [...stateCopy.panelRows]};
     } else if (action.type === "UPDATE_PANEL") {
+        console.log("UPDATE PANEL IN ROW");
+        let stateCopy = JSON.parse(JSON.stringify(state));
+        stateCopy.panelRows.forEach((row) => {
+            if (row.rowNum === action.rowNum) {
+                row.panels.forEach((panel) => {
+                    if (panel.panelNum === action.panelNum) {
+                        panel.panelTitle = action.panelTitle;
+                        panel.starred = action.starred;
+                    }
+                })
+            }
+        });
+        return {...state, panelRows: [...stateCopy.panelRows]};
     } else if (action.type === "ADD_PANEL_CONTENT") {
         console.log("ADD CONTENT TO PANEL");
         let stateCopy = JSON.parse(JSON.stringify(state));
@@ -99,28 +120,30 @@ function panelsReducer(state, action) {
         return {...state, panelRows: [...stateCopy.panelRows]};
     } else if (action.type === "UPDATE_PANEL_CONTENT") {
         console.log("UPDATE CONTENT IN PANEL");
-        // let stateCopy = JSON.parse(JSON.stringify(state));
-        // stateCopy.panelRows.forEach((row) => {
-        //     if (row.rowNum === action.rowNum) {
-        //         row.panels.forEach((panel) => {
-        //             if (panel.panelNum === action.panelNum) {
-        //                 panel.panelContent.forEach((content) => {
-        //                     if (content.contentNum === action.contentNum) {
-
-        //                     }
-        //                 });
-        //             }
-        //         });
-        //     }
-        // });
-        // return {...state, panelRows: [...stateCopy.panelRows]};
-    } else if (action.type === "SAVE_PANELS") {
+        console.log(action.newContent);
+        let stateCopy = JSON.parse(JSON.stringify(state));
+        stateCopy.panelRows.forEach((row) => {
+            if (row.rowNum === action.rowNum) {
+                row.panels.forEach((panel) => {
+                    if (panel.panelNum === action.panelNum) {
+                        panel.panelContent.forEach((content) => {
+                            if (content.contentNum === action.newContent.contentNum) {
+                                console.log("HERE");
+                                content.contentTitle = action.newContent.title;
+                                content.contentActual = action.newContent.actual;
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        return {...state, panelRows: [...stateCopy.panelRows]};
     }
     return state;
 }
 
 export default function PanelsContentContextProvider({children}) {
-    const [panelsState, panelsDispatch] = useReducer(panelsReducer, {panelRows: [...PANELS]});
+    const [panelsState, panelsDispatch] = useReducer(panelsReducer, {panelRows: []});
 
     function handleAddPanelRow() {
         panelsDispatch({
@@ -135,10 +158,11 @@ export default function PanelsContentContextProvider({children}) {
         });
     }
 
-    function handleUpdatePanelRow(rowNum) {
+    function handleUpdatePanelRow(rowNum, rowTitle) {
         panelsDispatch({
-            type: "REMOVE_PANEL_ROW",
+            type: "UPDATE_PANEL_ROW",
             rowNum,
+            rowTitle,
         });
     }
 
@@ -158,11 +182,13 @@ export default function PanelsContentContextProvider({children}) {
         });
     }
 
-    function handleUpdatePanelInRow(rowNum, panelNum) {
+    function handleUpdatePanelInRow(rowNum, panelNum, panelTitle, starred) {
         panelsDispatch({
-            type: "REMOVE_PANEL",
+            type: "UPDATE_PANEL",
             rowNum,
             panelNum,
+            panelTitle,
+            starred,
         });
     }
 
@@ -193,17 +219,15 @@ export default function PanelsContentContextProvider({children}) {
         });
     }
 
-    function handleSavePanels() {
-        panelsDispatch({
-            type: "SAVE_PANELS",
-        });
+    function handleSavePanels(id, worldName, category, name, panels) {
+        updateContent(id, worldName, category, name, panels);
     }
 
     const ctxValue = {
         panelRows: panelsState.panelRows,
         addPanelRow: handleAddPanelRow,
         removePanelRow: handleRemovePanelRow,
-        updateePanelRow: handleUpdatePanelRow,
+        updatePanelRow: handleUpdatePanelRow,
         addPanelToRow: handleAddPanelToRow,
         removePanelFromRow: handleRemovePanelFromRow,
         updatePanelInRow: handleUpdatePanelInRow,

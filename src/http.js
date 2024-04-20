@@ -25,6 +25,11 @@ export async function fetchContent(dispatchFn, category, contentId, worldName) {
     .then(data => {
         console.log("Specific Content:");
         console.log(data);
+
+        dispatchFn({
+            type: "CHANGE_MAIN_CONTENT",
+            payload: data,
+        });
     })
     .catch(error => console.log("ERROR fetching content: " + error));
 };
@@ -33,8 +38,8 @@ export async function fetchCategories(dispatchFn, worldName) {
     fetch(`http://localhost:8080/retrieveCategories?worldName=${worldName}`)
     .then(response => response.json())
     .then(data => {
-        console.log("Categories:");
-        console.log(data);
+        // console.log("Categories:");
+        // console.log(data);
         dispatchFn({type: "CHANGE_CATEGORY", payload: {name: "elements", content: data}});
     })
     .catch(error => console.log("ERROR fetching categories: " + error));
@@ -83,15 +88,16 @@ export async function createWorld(dispatchFn, worldName) {
     .catch(error => console.log("ERROR creating world: " + error));
 };
 
-export async function updateContentPanel(category, id, panel, worldName) {
+export async function updateContent(id, worldName, category, name, content) {
     fetch(`http://localhost:8080/update`, {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         body: {
+            "id": id,
+            "worldName": worldName,
             "category": category,
-            "contentId": id,
-            "panelContent": panel,
-            "worldName": worldName
+            "name": name,
+            "mainContent": content,
         }
     })
     .then(response => response.json())

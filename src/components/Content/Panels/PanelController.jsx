@@ -3,9 +3,18 @@ import PanelRow from './PanelRow.jsx';
 import { PanelsContentContext } from './panels-content-context.jsx';
 import "./panels.css";
 import MainPanel from './MainPanel.jsx';
+import { WorldContentContext } from '../../world-content-context.jsx';
 
 export default function PanelController() {
-    const {panelRows, addPanelRow} = useContext(PanelsContentContext);
+    const {worldName, mainContent} = useContext(WorldContentContext);
+    const {panelRows, addPanelRow, savePanels} = useContext(PanelsContentContext);
+
+    function getPanelRowNames() {
+        const titles = panelRows.map((row) => {
+            return row.rowTitle;
+        })
+        return titles;
+    }
 
     // Panel Object
     // panels row list: [{panelRow1}, {panelRow2}]
@@ -26,17 +35,17 @@ export default function PanelController() {
 
     return (
         <div id="content-container">
-            <MainPanel />
+            <MainPanel rowTitles={getPanelRowNames()} />
             <div id="panel-container">
                 {/* <button id="edit-panels-button" onClick={handleSetMove}>{move ? "SP" : "EP"}</button> */}
-                <button id="save-panels-button" onClick={addPanelRow}>Save</button>
+                <button id="save-panels-button" onClick={() => savePanels(mainContent.id, worldName, mainContent.category, mainContent.contentName, panelRows)}>Save</button>
                 <button id="add-panel-row-button" onClick={addPanelRow}>+</button>
                 <div id="divider" />
-                {panelRows.map((panelRow) => {
-                    return (<>
-                        <PanelRow key={panelRow.rowNum} row={panelRow} />
+                {panelRows.map((panelRow, index) => {
+                    return (<div key={index}>
+                        <PanelRow row={panelRow} />
                         <div id="divider" />
-                    </>);
+                    </div>);
                 })}
             </div>
         </div>
