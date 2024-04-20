@@ -35,24 +35,14 @@ public class WeaverController {
         return new ResponseEntity<List<Content>>(repository.getAllContent(category, worldName), createHeaders(), 200);
     }
 
-    @GetMapping("/retrieveWorlds")
-    public ResponseEntity<List<String>> getWorlds() {
-        return new ResponseEntity<List<String>>(repository.getAllWorlds(), createHeaders(), 200);
-    }
-
     @GetMapping("/retrieveCategories")
     public ResponseEntity<List<String>> getCategories(@RequestParam String worldName) {
         return new ResponseEntity<List<String>>(repository.getAllCategories(worldName), createHeaders(), 200);
     }
 
-    @PostMapping("/createWorld")
-    public ResponseEntity<Boolean> createNewWorld(@RequestParam String worldName) {
-        return new ResponseEntity<Boolean>(repository.createNewWorld(worldName), createHeaders(), 200);
-    }
-
-    @PostMapping("/createCategory")
-    public ResponseEntity<Boolean> createNewCategory(@RequestParam String worldName, @RequestParam String category) {
-        return new ResponseEntity<Boolean>(repository.createNewCategory(worldName, category), createHeaders(), 200);
+    @GetMapping("/retrieveWorlds")
+    public ResponseEntity<List<String>> getWorlds() {
+        return new ResponseEntity<List<String>>(repository.getAllWorlds(), createHeaders(), 200);
     }
 
     @PostMapping("/create")
@@ -60,14 +50,30 @@ public class WeaverController {
         return new ResponseEntity<String>(repository.createNewContentEntry(category, name, worldName), createHeaders(), 200);
     }
 
+    @PostMapping("/createCategory")
+    public ResponseEntity<Boolean> createNewCategory(@RequestParam String worldName, @RequestParam String category) {
+        return new ResponseEntity<Boolean>(repository.createNewCategory(worldName, category), createHeaders(), 200);
+    }
+
+    @PostMapping("/createWorld")
+    public ResponseEntity<Boolean> createNewWorld(@RequestParam String worldName) {
+        return new ResponseEntity<Boolean>(repository.createNewWorld(worldName), createHeaders(), 200);
+    }
+
     @PostMapping("/update")
     public ResponseEntity<Boolean> updateContent(@RequestBody Content content) {
-        return new ResponseEntity<Boolean>(repository.updateContentEntry(content.category(), content.id(), content.panelContent(), content.worldName()), createHeaders(), 200);
+        System.out.println("Update: " + content);
+        return new ResponseEntity<Boolean>(repository.updateContentEntry(content), createHeaders(), 200);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<Boolean> deleteContent(@RequestParam String category, @RequestParam String contentId, @RequestParam String worldName) {
         return new ResponseEntity<Boolean>(repository.deleteContent(category, contentId, worldName), createHeaders(), 200);
+    }
+
+    @DeleteMapping("/deleteCategory")
+    public ResponseEntity<Boolean> deleteCategory(@RequestParam String worldName) {
+        return new ResponseEntity<Boolean>(repository.deleteWorld(worldName), createHeaders(), 200);
     }
 
     @DeleteMapping("/deleteWorld")

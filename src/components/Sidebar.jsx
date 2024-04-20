@@ -1,5 +1,6 @@
 import React from 'react';
 import { WorldContentContext } from './world-content-context.jsx';
+import "./sidebar.css";
 
 export default function Sidebar() {
     const {changeCategory} = React.useContext(WorldContentContext);

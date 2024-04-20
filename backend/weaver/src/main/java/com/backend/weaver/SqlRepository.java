@@ -61,9 +61,10 @@ public class SqlRepository {
 
     public Content getSpecificContent(String category, String contentId, String worldName) {
         try {
-            System.out.println("Grab Content " + contentId + ".");
+            System.out.println("Grab Content " + contentId + " " + category + " " + worldName + ".");
             ResultSet results = statement.executeQuery(String.format(sqlStatements.grabSpecificFromCategoryInContentTable, contentId, worldName, category));
             if (results != null) {
+                System.out.println(results.getString("content_name"));
                 return new Content(
                     contentId,
                     worldName,
@@ -105,10 +106,14 @@ public class SqlRepository {
         return formattedString;
     }
 
-    public Boolean updateContentEntry(String category, String contentId, String panelUpdate, String worldName) {
+    public Boolean updateContentEntry(Content content) {
+        System.out.println("Update Content Entry: " + content);
         try {
-            System.out.println("Updating Content Panel for " + contentId + ".");
-            statement.executeUpdate(String.format(sqlStatements.updateSpecificInContentTable, panelUpdate, contentId, worldName, category));
+            statement.executeUpdate(String.format(sqlStatements.updateContentInContentTable, content.mainContent(), content.id(), content.worldName(), content.category()));
+            if (!content.name().isEmpty()) {
+                System.out.println("Updating Content Name for " + content.id() + ".");
+                statement.executeUpdate(String.format(sqlStatements.updateNameInContentTable, content.name(), content.id(), content.worldName(), content.category()));
+            }
             conn.commit();
             return true;
         } catch (SQLException e) {

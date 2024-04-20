@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer, useRef } from 'react';
 import { WorldContentContext } from './world-content-context.jsx';
 import { CreationModal } from './CreationModal.jsx';
 import { fetchAllContent } from '../http.js';
@@ -20,9 +20,9 @@ function elementReducer(state, action) {
 
 export default function ElementSidebar() {
     const {createContent, createCategory, changeMainContent, worldName, mainCategoryContent} = React.useContext(WorldContentContext);
-    const [elementState, elementDispatch] = React.useReducer(elementReducer, {elementCategory: "", elementContent: []});
-    const elementDialog = React.useRef();
-    const categoryDialog = React.useRef();
+    const [elementState, elementDispatch] = useReducer(elementReducer, {elementCategory: "", elementContent: []});
+    const elementDialog = useRef();
+    const categoryDialog = useRef();
 
     function handleContentCreate() {
         elementDialog.current.open();
@@ -34,7 +34,7 @@ export default function ElementSidebar() {
 
     function handleGrabElementContent(categoryName) {
         //dispatchFn, dispatchName, category, worldName
-        fetchAllContent(elementDispatch, "CHANGE_ELEMENT_CONTENT", categoryName, worldName);   
+        fetchAllContent(elementDispatch, "CHANGE_ELEMENT_CONTENT", categoryName, worldName);
     }
 
     function handleChooseCategory(categoryName) {
@@ -70,7 +70,7 @@ export default function ElementSidebar() {
                     </div>
                     <div id="content-buttons">
                         {elementState.elementContent.length > 0 && elementState.elementContent.map((data) => {
-                            return <button key={data.id} onClick={() => changeMainContent(data.id)}>{data.contentName}</button>;
+                            return <button key={data.id} onClick={() => changeMainContent(data.id, elementState.elementCategory)}>{data.name}</button>;
                         })}
                     </div>
                 </>}

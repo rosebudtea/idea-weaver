@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from "react";
-import { createCategory, createWorld, fetchAllContent, fetchCategories, createContent } from "../http.js";
+import { createCategory, createWorld, fetchAllContent, fetchCategories, createContent, fetchContent } from "../http.js";
 
 export const WorldContentContext = createContext({
     worldName: "",
@@ -16,28 +16,31 @@ export const WorldContentContext = createContext({
 
 function worldReducer(state, action) {
     if (action.type === "CHANGE_WORLD") {
-        console.log("Change World: " + action.payload);
+        console.log("Change World");
+        console.log(action.payload);
         return {
             ...state,
             worldName: action.payload,
         };
     } else if (action.type === "CHANGE_CATEGORY") {
-        console.log("Change Category: " + action.payload);
+        console.log("Change Category");
+        console.log(action.payload);
         return {
             ...state,
             mainCategory: action.payload.name,
             mainCategoryContent: action.payload.content,
         };
     } else if (action.type === "CHANGE_CATEGORY_CONTENT") {
-        console.log("Change Category Content: " + action.payload);
+        console.log("Change Category Content");
+        console.log(action.payload);
         return {
             ...state,
             mainCategoryContent: action.payload,
         };
     } else if (action.type === "CHANGE_MAIN_CONTENT") {
-        console.log("Change Main Content: " + action.payload);
-        const content = {category: state.mainCategory, id: action.payload};
-        console.log(content);
+        console.log("Change Main Content");
+        console.log(action.payload);
+        const content = action.payload;
         return {
             ...state,
             mainContent: content,
@@ -54,13 +57,11 @@ export default function WorldContentContextProvider({children}) {
     }
 
     function createNewCategory(categoryName) {
-        console.log("Create Category");
         createCategory(categoryName, worldState.worldName);
         fetchCategories(worldDispatch, worldState.worldName);
     }
 
     function createNewContent(name, category) {
-        console.log("Create Content");
         createContent(category, name, worldState.worldName);
     }
 
@@ -72,7 +73,6 @@ export default function WorldContentContextProvider({children}) {
     }
 
     function handleCategoryChange(category) {
-        // console.log("Handle Category Change: " + category);
         if (category === worldState.mainCategory) {
             worldDispatch({
                 type: "CHANGE_CATEGORY",
@@ -90,11 +90,13 @@ export default function WorldContentContextProvider({children}) {
         }
     }
 
-    function handleMainContentChange(id) {
-        worldDispatch({
-            type: "CHANGE_MAIN_CONTENT",
-            payload: id,
-        });
+    function handleMainContentChange(id, category = "") {
+        // dispatchFn, category, contentId, worldName
+        if (worldState.mainCategory === "elements") {
+            fetchContent(worldDispatch, category, id, worldState.worldName);
+        } else {
+            fetchContent(worldDispatch, worldState.mainCategory, id, worldState.worldName);
+        }
     }
 
     const ctxValue = {
