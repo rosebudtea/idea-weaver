@@ -174,7 +174,7 @@ public class ElementRepository {
         }
     }
     public Panel createPanel(String panelName, int panelNum, String panelType, String rowId, String starred) {
-        System.out.println("Create Panel Row");
+        System.out.println("Create Panel");
         UUID panelId = UUID.randomUUID();
         // statement.executeUpdate(String.format(sqlStatements.addPanelIntoElementPanelsTable, panelId, panelName, panelNum, panelType, rowId, starred));
         sqlStatements.executeStatementBoolean(autoCommit, String.format(sqlStatements.addPanelIntoElementPanelsTable, panelId, panelName, panelNum, panelType, rowId, starred));

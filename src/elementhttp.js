@@ -43,7 +43,7 @@ export async function fetchAllPanels(dispatchFn, rowId) {
     .then(data => {
         // console.log("Get All Panels:");
         // console.log(data);
-        dispatchFn(data)
+        dispatchFn({type: "SET_PANELS", payload: data});
     })
     .catch(error => console.log("ERROR fetching all content: " + error));
 };
@@ -56,6 +56,17 @@ export async function createPanelRow(dispatchFn, rowName, rowNum, elementId) {
         console.log("New Panel Row:");
         console.log(data);
         dispatchFn({type: "ADD_PANEL_ROW", payload: data});
+    })
+    .catch(error => console.log("ERROR creating content: " + error));
+};
+
+export async function createPanel(dispatchFn, panelName, panelNum, panelType, rowId, starred) {
+    fetch(`http://localhost:8080/createPanel?panelName=${panelName}&panelNum=${panelNum}&panelType=${panelType}&rowId=${rowId}&starred=${starred}`, {method: 'post'})
+    .then(response => response.json())
+    .then(data => {
+        console.log("New Panel Row:");
+        console.log(data);
+        dispatchFn({type: "ADD_PANEL", payload: data});
     })
     .catch(error => console.log("ERROR creating content: " + error));
 };

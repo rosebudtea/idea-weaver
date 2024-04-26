@@ -33,7 +33,6 @@ public class SqlStatements {
         try {
             Connection conn = createConnection(autoCommit);
             Statement statement = conn.createStatement();
-            System.out.println("Opened database in Elements.");
             statement.executeUpdate(createWorldsTable);
             statement.executeUpdate(createElementsTable);
             statement.executeUpdate(createElementPanelRowsTable);
@@ -50,7 +49,6 @@ public class SqlStatements {
         try {
             Connection conn = createConnection(autoCommit);
             Statement statement = conn.createStatement();
-            System.out.println("Opened database in Elements.");
             statement.executeUpdate(dropWorldsTable);
             statement.executeUpdate(dropElementsTable);
             statement.executeUpdate(dropElementPanelRowsTable);
@@ -67,7 +65,6 @@ public class SqlStatements {
     public ResultSet executeStatementWithResults(Connection conn, String query) {
         try {
             Statement statement = conn.createStatement();
-            System.out.println("Opened database in Elements.");
             ResultSet results = statement.executeQuery(query);
             return results;
         } catch (SQLException e) {
@@ -78,16 +75,13 @@ public class SqlStatements {
 
     public Boolean executeStatementBoolean(Boolean autoCommit, String query) {
         try {
-            Class.forName("org.sqlite.JDBC");
-            Connection conn = DriverManager.getConnection(String.format ("jdbc:sqlite:%s", databaseName));
-            conn.setAutoCommit(autoCommit);
+            Connection conn = createConnection(autoCommit);
             Statement statement = conn.createStatement();
-            System.out.println("Opened database in Elements.");
-            statement.executeQuery(query); 
+            Boolean result = statement.execute(query); 
             conn.commit();
             conn.close();
-            return true;
-        } catch (ClassNotFoundException | SQLException e) {
+            return result;
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }

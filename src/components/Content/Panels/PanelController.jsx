@@ -25,7 +25,8 @@ export default function PanelController() {
             try {
                 fetchAllPanelRows(elementDispatch, chosenEntry.id);
             } catch (err) {
-                setError({ message: err.message || "Failed to fetch places" });
+                console.log(err);
+                // setError({ message: err.message || "Failed to fetch places" });
             }
             setIsFetching(false);
         }
