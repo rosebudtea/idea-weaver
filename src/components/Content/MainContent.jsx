@@ -4,16 +4,15 @@ import PanelController from './Panels/PanelController.jsx';
 import PanelsContentContextProvider from './Panels/panels-content-context.jsx';
 
 export default function MainContent() {
-    const {mainContent, mainCategory} = React.useContext(WorldContentContext);
+    const {currTab, chosenEntry} = React.useContext(WorldContentContext);
 
     // Panels
     // Documents: Snippets, Works
     // Timelines
-    // Dialogue (This is only for game development so this isn't a priority for right now and maybe should be a separate project)
     // Outlines
 
     function renderContent() {
-        switch (mainCategory) {
+        switch (currTab) {
             case "timelines":
                 return <p>Timelines</p>;
             case "outlines":
@@ -21,7 +20,7 @@ export default function MainContent() {
             case "works":
                 return <p>Documents</p>;
             case "elements":
-                if (mainContent.id) {
+                if (chosenEntry.id) {
                     return (<PanelsContentContextProvider>
                         <PanelController />
                     </PanelsContentContextProvider>);
@@ -33,8 +32,8 @@ export default function MainContent() {
 
     return (
         <div id='main-content'>
-            {mainContent && renderContent()}
-            {!mainContent && <p>Please choose something to work on</p>}
+            {currTab && renderContent()}
+            {!currTab && <p>Please choose something to work on</p>}
         </div>
     );
 }

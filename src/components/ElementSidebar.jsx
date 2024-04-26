@@ -1,7 +1,7 @@
 import React, { useReducer, useRef } from 'react';
 import { WorldContentContext } from './world-content-context.jsx';
 import { CreationModal } from './CreationModal.jsx';
-import { fetchAllContent } from '../http.js';
+import { fetchAllElementEntries } from '../elementhttp.js';
 
 function elementReducer(state, action) {
     if (action.type === "CHANGE_ELEMENT_CATEGORY") {
@@ -9,18 +9,20 @@ function elementReducer(state, action) {
             ...state,
             elementCategory: action.payload,
         };
-    } else if (action.type === "CHANGE_ELEMENT_CONTENT") {
+    } else if (action.type === "CHANGE_ELEMENT_ENTRIES") {
+        // console.log("Change element entries");
+        // console.log(action);
         return {
             ...state,
-            elementContent: action.payload,
+            elementEntries: action.payload,
         };
     }
     return state;
 }
 
 export default function ElementSidebar() {
-    const {createContent, createCategory, changeMainContent, worldName, mainCategoryContent} = React.useContext(WorldContentContext);
-    const [elementState, elementDispatch] = useReducer(elementReducer, {elementCategory: "", elementContent: []});
+    const {changeChosenEntry, currWorld, currTabEntries} = React.useContext(WorldContentContext);
+    const [elementState, elementDispatch] = useReducer(elementReducer, {elementCategory: "", elementEntries: []});
     const elementDialog = useRef();
     const categoryDialog = useRef();
 
@@ -32,31 +34,35 @@ export default function ElementSidebar() {
         categoryDialog.current.open();
     }
 
-    function handleGrabElementContent(categoryName) {
-        //dispatchFn, dispatchName, category, worldName
-        fetchAllContent(elementDispatch, "CHANGE_ELEMENT_CONTENT", categoryName, worldName);
+    function handleGrabElementEntries(catName) {
+        fetchAllElementEntries(elementDispatch, currWorld.id, catName);
     }
 
-    function handleChooseCategory(categoryName) {
+    function handleChooseCategory(catName) {
         elementDispatch({
             type: "CHANGE_ELEMENT_CATEGORY",
-            payload: categoryName,
+            payload: catName,
         });
-        handleGrabElementContent(categoryName);
+        handleGrabElementEntries(catName);
+    }
+
+    function handleChooseEntry(index) {
+        const chosenEntry = elementState.elementEntries[index];
+        changeChosenEntry(chosenEntry);
     }
 
     return (
         <>
-            <CreationModal createFn={createContent} category={elementState.elementCategory} ref={elementDialog}/>
-            <CreationModal createFn={createCategory} category={"elements"} ref={categoryDialog}/>
+            {/* <CreationModal createFn={createContent} category={elementState.elementCategory} ref={elementDialog}/> */}
+            {/* <CreationModal createFn={createCategory} category={"elements"} ref={categoryDialog}/> */}
             <div id="content-side">
                 {!elementState.elementCategory && <>
                     <div id="side-head">
                         <input type="text" />
-                        <button onClick={handleCategoryCreate}>C</button>
+                        {/* <button onClick={handleCategoryCreate}>C</button> */}
                     </div>
                     <div id="content-buttons">
-                        {mainCategoryContent.length > 0 && mainCategoryContent.map((category) => {
+                        {currTabEntries.length > 0 && currTabEntries.map((category) => {
                             return <button key={category} onClick={() => {handleChooseCategory(category)}}>{category}</button>
                         })}
                     </div>
@@ -65,12 +71,12 @@ export default function ElementSidebar() {
                     <p>{elementState.elementCategory}</p>
                     <div id="side-head">
                         <button onClick={() => {handleChooseCategory("")}}>{"<"}</button>
-                        <input type="text" />
-                        <button onClick={handleContentCreate}>C</button>
+                        <input type="text" /> 
+                        {/* <button onClick={handleContentCreate}>C</button> */}
                     </div>
                     <div id="content-buttons">
-                        {elementState.elementContent.length > 0 && elementState.elementContent.map((data) => {
-                            return <button key={data.id} onClick={() => changeMainContent(data.id, elementState.elementCategory)}>{data.name}</button>;
+                        {elementState.elementEntries.length > 0 && elementState.elementEntries.map((data, index) => {
+                            return <button key={data.id} onClick={() => handleChooseEntry(index)}>{data.name}</button>;
                         })}
                     </div>
                 </>}

@@ -3,6 +3,15 @@ import React, { createContext, useReducer } from "react";
 export const PanelsContentContext = createContext({
     panelRows: [],
     addPanelRow: () => {},
+    removePanelRow: () => {},
+    updatePanelRow: () => {},
+    addPanelToRow: () => {},
+    removePanelFromRow: () => {},
+    updatePanelInRow: () => {},
+    addContentToPanel: () => {},
+    removeContentFromPanel: () => {},
+    updateContentInPanel: () => {},
+    savePanels: () => {},
 });
 
 function panelsReducer(state, action) {

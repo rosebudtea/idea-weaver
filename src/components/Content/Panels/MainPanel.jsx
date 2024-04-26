@@ -2,11 +2,10 @@ import React, { useContext } from 'react';
 import { WorldContentContext } from '../../world-content-context.jsx';
 
 export default function MainPanel({rowTitles}) {
-    const {mainContent} = useContext(WorldContentContext);
-    console.log(mainContent);
+    const {chosenEntry} = useContext(WorldContentContext);
 
     return (<div>
-        <p>{mainContent.name}</p>
+        <p>{chosenEntry.name}</p>
         <ol>
             {rowTitles.map((title, index) => {
                 return (<li key={index}>{title}</li>);

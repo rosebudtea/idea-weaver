@@ -7,15 +7,15 @@ import ElementSidebar from './components/ElementSidebar.jsx';
 import WorksSidebar from './components/WorksSidebar.jsx';
 
 export default function Base() {
-    const {worldName, mainCategory} = React.useContext(WorldContentContext);
+    const {currWorld, currTab} = React.useContext(WorldContentContext);
 
     return (
         <>
-            {!worldName && <Welcome />}
-            {worldName && <div id="main">
+            {!currWorld && <Welcome />}
+            {currWorld && <div id="main">
                 <Sidebar />
-                {mainCategory && mainCategory === "elements" && <ElementSidebar />}
-                {mainCategory && mainCategory !== "elements" && <WorksSidebar />}
+                {currTab && currTab === "elements" && <ElementSidebar />}
+                {currTab && currTab !== "elements" && <WorksSidebar />}
                 <MainContent />
             </div>}
         </>

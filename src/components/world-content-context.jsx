@@ -1,115 +1,108 @@
 import React, { createContext, useReducer } from "react";
-import { createCategory, createWorld, fetchAllContent, fetchCategories, createContent, fetchContent } from "../http.js";
+import { createWorld, fetchElementTypes } from "../worldhttp";
+import { fetchElementEntry } from "../elementhttp";
 
 export const WorldContentContext = createContext({
-    worldName: "",
-    mainCategory: "",
-    mainCategoryContent: [],
-    mainContent: {},
+    currWorld: {},
+    currTab: "",
+    currTabEntries: [],
+    chosenEntry: {},
     createWorld: () => {},
-    createCategory: () => {},
-    createContent: () => {},
-    changeWorldName: () => {},
-    changeCategory: () => {},
-    changeMainContent: () => {},
+    changeWorld: () => {},
+    changeTab: () => {},
+    changeChosenEntry: () => {},
 });
 
 function worldReducer(state, action) {
     if (action.type === "CHANGE_WORLD") {
-        console.log("Change World");
-        console.log(action.payload);
+        // console.log("Change World");
+        // console.log(action.payload);
         return {
             ...state,
-            worldName: action.payload,
+            currWorld: action.payload,
         };
-    } else if (action.type === "CHANGE_CATEGORY") {
-        console.log("Change Category");
-        console.log(action.payload);
+    } else if (action.type === "CHANGE_TAB") {
+        // console.log("Change Curr Tab");
+        // console.log(action.payload);
         return {
             ...state,
-            mainCategory: action.payload.name,
-            mainCategoryContent: action.payload.content,
+            currTab: action.payload.name,
+            currTabEntries: action.payload.entries,
         };
-    } else if (action.type === "CHANGE_CATEGORY_CONTENT") {
-        console.log("Change Category Content");
-        console.log(action.payload);
+    } else if (action.type === "CHANGE_CHOSEN_ENTRY") {
+        // console.log("Change Chosen Entry");
+        // console.log(action);
         return {
             ...state,
-            mainCategoryContent: action.payload,
-        };
-    } else if (action.type === "CHANGE_MAIN_CONTENT") {
-        console.log("Change Main Content");
-        console.log(action.payload);
-        const content = action.payload;
-        return {
-            ...state,
-            mainContent: content,
+            chosenEntry: action.payload,
         };
     }
     return state;
 }
 
 export default function WorldContentContextProvider({children}) {
-    const [worldState, worldDispatch] = useReducer(worldReducer, {worldName: "", mainCategory: "", mainCategoryContent: [], mainContent: {}});
+    const [worldState, worldDispatch] = useReducer(worldReducer, {currWorld: "", currTab: "", currTabEntries: [], chosenEntry: {}});
 
-    function createNewWorld(worldName) {
-        createWorld(handleWorldChange, worldName);
+    function createNewWorld(currWorld) {
+        createWorld(handleWorldChange, currWorld);
     }
 
-    function createNewCategory(categoryName) {
-        createCategory(categoryName, worldState.worldName);
-        fetchCategories(worldDispatch, worldState.worldName);
-    }
-
-    function createNewContent(name, category) {
-        createContent(category, name, worldState.worldName);
-    }
-
-    function handleWorldChange(worldName) {
+    function handleWorldChange(currWorld) {
         worldDispatch({
             type: "CHANGE_WORLD",
-            payload: worldName,
+            payload: currWorld,
         });
     }
 
-    function handleCategoryChange(category) {
-        if (category === worldState.mainCategory) {
+    function handleTabChange(tab) {
+        if (tab === worldState.currTab) {
             worldDispatch({
-                type: "CHANGE_CATEGORY",
+                type: "CHANGE_TAB",
                 payload: {
                     name: "",
-                    content: [],
+                    entries: [],
                 },
             });
         } else {
-            if (category === "elements") {
-                fetchCategories(worldDispatch, worldState.worldName);
+            if (tab === "elements") {
+                fetchElementTypes(worldDispatch, worldState.currWorld.id);
             } else {
-                fetchAllContent(worldDispatch, "CHANGE_CATEGORY", category, worldState.worldName);
+                // fetchAllContent(worldDispatch, "CHANGE_TAB", category, worldState.currWorld);
+                worldDispatch({
+                    type: "CHANGE_TAB",
+                    payload: {
+                        name: tab,
+                        entries: [],
+                    },
+                });
             }
         }
-    }
+    } 
 
-    function handleMainContentChange(id, category = "") {
-        // dispatchFn, category, contentId, worldName
-        if (worldState.mainCategory === "elements") {
-            fetchContent(worldDispatch, category, id, worldState.worldName);
+    function handleChosenEntryChange(entry) {
+        // console.log("Change Chosen Entry");
+        if (worldState.currTab === "elements") {
+            // fetchElementEntry(worldDispatch, tab, id, worldState.worldName);
+                worldDispatch({
+                    type: "CHANGE_CHOSEN_ENTRY",
+                    payload: entry,
+                });
+
         } else {
-            fetchContent(worldDispatch, worldState.mainCategory, id, worldState.worldName);
+            console.log("Not yet implemented");
+            // fetchContent(worldDispatch, worldState.currTab, id, worldState.worldName);
         }
     }
 
     const ctxValue = {
-        worldName: worldState.worldName,
-        mainCategory: worldState.mainCategory,
-        mainCategoryContent: worldState.mainCategoryContent,
-        mainContent: worldState.mainContent,
+        currWorld: worldState.currWorld,
+        currTab: worldState.currTab,
+        currTabEntries: worldState.currTabEntries,
+        chosenEntry: worldState.chosenEntry,
         createWorld: createNewWorld,
-        createCategory: createNewCategory,
-        createContent: createNewContent,
-        changeWorldName: handleWorldChange,
-        changeCategory: handleCategoryChange,
-        changeMainContent: handleMainContentChange,
+        changeWorld: handleWorldChange,
+        changeTab: handleTabChange,
+        changeChosenEntry: handleChosenEntryChange,
     };
 
     return <WorldContentContext.Provider value={ctxValue}>{children}</WorldContentContext.Provider>

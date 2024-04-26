@@ -1,12 +1,10 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Content from './Content.jsx';
 import Dropdown from './Dropdown.jsx';
-import { PanelsContentContext } from './panels-content-context.jsx';
 import DeleteButton from '../../DeleteButton.jsx';
 
 export default function Panel({panel, rowNum}) {
     const [editingPanel, setEditingPanel] = useState(false);
-    const {addContentToPanel, removePanelFromRow, updatePanelInRow} = useContext(PanelsContentContext);
     const titleRef = useRef();
 
     function handleSetEditingPanels(edit) {
@@ -21,7 +19,7 @@ export default function Panel({panel, rowNum}) {
     return (<>
         <div id="panel">
             <div id="panel-title">
-                <button onClick={() => saveRow(true)} style={panel.starred ? {backgroundColor: 'yellow'} : {backgroundColor: 'dimgrey'}}>*</button>
+                <button onClick={() => saveRow(true)} style={panel.starred !== "false" ? {backgroundColor: 'yellow'} : {backgroundColor: 'dimgrey'}}>*</button>
                 {!editingPanel && <>
                     <h3 id="title">{panel.panelTitle} {panel.panelNum}</h3>
                     <button onClick={() => handleSetEditingPanels(true)}>E</button>
@@ -32,9 +30,9 @@ export default function Panel({panel, rowNum}) {
                 </>}
                 <DeleteButton onConfirm={() => removePanelFromRow(rowNum, panel.panelNum)} />
             </div>
-            {panel.panelContent.map((content, index) => {
+            {/* {panel.panelContent.map((content, index) => {
                 return (<Content key={index} rowNum={rowNum} panelNum={panel.panelNum} content={content} />);
-            })}
+            })} */}
             <Dropdown
                 buttonText={"++"}
                 menuItems={[
